@@ -1,11 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User");
-// const userLogin = require("../controllers/userLogin");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// const user
 
 router.post("/login", async (req, res) => {
   const user = await User.findOne({ email: req.body.email });

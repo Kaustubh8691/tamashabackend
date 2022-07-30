@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const propertySchema = new mongoose.Schema({
+const foodSchema = new mongoose.Schema({
   Date: {
     type: String,
   },
@@ -26,6 +26,6 @@ const propertySchema = new mongoose.Schema({
   
 },{strict:false});
 
-const Property = mongoose.model("Daily", propertySchema);
+const Food = mongoose.model("Daily", foodSchema);
 
 module.exports = Property;

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = new express();
-const Data = require("../models/Property");
+const Data = require("../models/Food")
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
@@ -65,7 +65,7 @@ router.post("/calories", userAuth, async (req, res) => {
     let month = date1.getMonth() + 1;
     let year = date1.getFullYear();
     let date2 = "";
-    date2 += year+"-"+month+"-"+day;
+    date2 += year + "-" + month + "-" + day;
     // date2="2022-7-25";
     // console.log(date2);
     let hours = date1.getHours();
@@ -84,7 +84,7 @@ router.post("/calories", userAuth, async (req, res) => {
     const user = await User.findOne({ _id: req.user._id });
     limit = user.limit;
     const daycalories = await Data.find({ date: date2, User: req.user._id });
-    
+
     let cal = 0;
     if (daycalories.length > 0) {
       let index = daycalories.length;
@@ -92,7 +92,7 @@ router.post("/calories", userAuth, async (req, res) => {
     }
 
     let PreviousCalories = totalCaloris + cal;
-    
+
     if (PreviousCalories < limit) {
       const data = new Data({
         ...req.body,
@@ -135,28 +135,28 @@ router.post("/calories", userAuth, async (req, res) => {
 });
 
 // show all users to only who are Admin
-router.get("/Admin/allusers",userAuth ,async(req,res)=>{
+router.get("/Admin/allusers", userAuth, async (req, res) => {
   try {
     const user1 = await User.findOne({ _id: req.user._id });
     const role = user1.Role;
-    if(role=="User"){
-      const data=await User.find();
+    if (role == "User") {
+      const data = await User.find();
       res.json({
-        status:"success",
-        message:"all users data",
-        data:data
+        status: "success",
+        message: "all users data",
+        data: data
       })
-    }else{
+    } else {
       res.json({
-        status:"warning",
-        message:"this page only for Admin"
-        })
+        status: "warning",
+        message: "this page only for Admin"
+      })
     }
-    
+
   } catch (error) {
     res.json({
-      status:"error",
-      message:error
+      status: "error",
+      message: error
     })
   }
 })
@@ -202,7 +202,7 @@ router.get("/Admin/report/userentry/:id", userAuth, async (req, res) => {
     const role = user1.Role;
     if (role == "Admin") {
       const user = req.params.id;
-      const data = await Data.find({ User: user }).sort({date:1});
+      const data = await Data.find({ User: user }).sort({ date: 1 });
 
       if (!data) {
         return res.json({
@@ -210,40 +210,40 @@ router.get("/Admin/report/userentry/:id", userAuth, async (req, res) => {
           message: "post not found",
         });
       }
-      let lastindex=data.length;
-      let currentDate=data[lastindex-1].date;
-      let day1=currentDate.split("-")[0];
-       day1=day1;
-     
-      let array=[];
-     
-      for (let i=0;i<2;i++){
-        let day2=parseInt(day1)-7;
-        
-        
-        let dass=await Data.find({date:{$gte:("2022-7-"+day2),$lte:("2022-7-"+day1)}})
+      let lastindex = data.length;
+      let currentDate = data[lastindex - 1].date;
+      let day1 = currentDate.split("-")[0];
+      day1 = day1;
+
+      let array = [];
+
+      for (let i = 0; i < 2; i++) {
+        let day2 = parseInt(day1) - 7;
+
+
+        let dass = await Data.find({ date: { $gte: ("2022-7-" + day2), $lte: ("2022-7-" + day1) } })
         array.push(dass.length);
-        if (i==0){
-          let ans=0
-          let summ=dass.map(items=>{
-            ans+=items.totalCaloris;
+        if (i == 0) {
+          let ans = 0
+          let summ = dass.map(items => {
+            ans += items.totalCaloris;
           });
           array.push(ans);
         }
-        day1=day2;
+        day1 = day2;
       }
 
-      let currentEntries=array[0];
-      let lastWeekEntries=array[2];
-      let avarage=parseInt(array[1]/7);
-      const Result={
-          current7Entries:currentEntries,
-          lastWeekEntries:lastWeekEntries,
-          AvarageCalories:avarage
+      let currentEntries = array[0];
+      let lastWeekEntries = array[2];
+      let avarage = parseInt(array[1] / 7);
+      const Result = {
+        current7Entries: currentEntries,
+        lastWeekEntries: lastWeekEntries,
+        AvarageCalories: avarage
       }
       res.json({
         status: "sucess",
-        report:Result
+        report: Result
       });
     } else {
       res.status(400).json({
@@ -312,7 +312,7 @@ router.delete("/user/:id", userAuth, async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.user._id });
     const role = user.Role;
-    const id=req.params.id;
+    const id = req.params.id;
     if (role == "User") {
       const data = await Data.findOneAndDelete(
         { _id: id }
@@ -330,7 +330,7 @@ router.delete("/user/:id", userAuth, async (req, res) => {
 
   } catch (error) {
     res.json({
-      error:error
+      error: error
     });
   }
 })

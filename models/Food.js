@@ -28,4 +28,4 @@ const foodSchema = new mongoose.Schema({
 
 const Food = mongoose.model("Daily", foodSchema);
 
-module.exports = Property;
+module.exports = Food;
